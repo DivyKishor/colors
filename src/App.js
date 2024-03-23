@@ -1,25 +1,47 @@
-import logo from './logo.svg';
-import './App.css';
+import React, {useState, useEffect} from 'react';
 
-function App() {
+export function  App(props) {
+    const[colors, setColors] = useState([]);
+    const [newColor, setNewColor] = useState("");
+
+  const handleSubmit = async(e) =>{
+      e.preventDefault();
+      const response = await fetch(`https://www.csscolorsapi.com/api/colors/${newColor}`);
+      const data = await response.json();
+      console.log(data);
+      setColors([...colors,data.data]);
+  }
+
+    async function fetchColors(){
+      const response = await fetch("https://www.csscolorsapi.com/api/colors");
+      const data = await response.json();
+
+      //console.log(data.colors);
+      setColors(data.colors.slice(0,20));
+    }
+
+
+   useEffect(()=>{
+    fetchColors();
+   },[]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+     <div className="container">
+      <form onSubmit={handleSubmit}>
+        <input type="text" className="text-input" placeholder="Enter Name" value={newColor} onChange={e=>setNewColor(e.target.value)}/>
+        <button className="fetch-button">Fetch</button>
+      </form>
+      <div className="container-flex">
+        {colors.map((color) => {
+          return <div key={color.name} className="item-box" style={{"backgroundColor":color.name}}>
+          </div>
+        })}
+      </div>   
+      <p className="note">This file contains your Color Styles. They are applied to the shapes in the example above. You can use them across all your files.</p>
+     </div>
   );
 }
 
 export default App;
+// Log to console
+//console.log('Hello console')
