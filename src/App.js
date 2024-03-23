@@ -6,18 +6,26 @@ export function  App(props) {
 
   const handleSubmit = async(e) =>{
       e.preventDefault();
-      const response = await fetch(`https://www.csscolorsapi.com/api/colors/${newColor}`);
-      const data = await response.json();
-      console.log(data);
-      setColors([...colors,data.data]);
+      try{
+        const response = await fetch(`https://www.csscolorsapi.com/api/colors/${newColor}`);
+        const data = await response.json();
+        console.log(data);
+        setColors([...colors,data.data]);
+      }catch(error){
+        console.log("Error Fetching data", error);
+      }
   }
 
     async function fetchColors(){
-      const response = await fetch("https://www.csscolorsapi.com/api/colors");
-      const data = await response.json();
+      try{
+        const response = await fetch("https://www.csscolorsapi.com/api/colors");
+        const data = await response.json();
 
-      //console.log(data.colors);
-      setColors(data.colors.slice(0,20));
+        //console.log(data.colors);
+        setColors(data.colors.slice(0,20));
+      }catch(error){
+        console.log("Error fetching data", error);
+      }
     }
 
 
